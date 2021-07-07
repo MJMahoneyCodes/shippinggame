@@ -28,6 +28,7 @@
         //the total amount of money the player has earned
         var currentEarnings = 0;
         var inspectorChance = 0;
+        var buttonClicks = 0;
 
         var legalItems = [];
         var illegalItems = [];
@@ -47,7 +48,9 @@
         //flags for alert notices to only fire one time when reaching that earning level
         var earnings1000Flag = false;
         var earnings2500Flag = false;
-        var earnings5000Flag = false;
+
+        //a new game flag so the postal inspector doesn't visit the very first time
+        var newGame = true;
 
         //populate initial items and prices
         makeNewItems();
@@ -65,37 +68,51 @@
             var itemTwoAmount = parseInt(document.getElementById("itemTwoEarnings").textContent);
             var itemThreeAmount = parseInt(document.getElementById("itemThreeEarnings").textContent);
 
-            if (itemOne.checked){
-                currentEarnings = currentEarnings + itemOneAmount;
-            }
-            if (itemTwo.checked){
-                currentEarnings = currentEarnings + itemTwoAmount;
-            }
-            //itemThree is the illegal item, always
-            //increases chance an inspector ends the game
-            if (itemThree.checked){
-                currentEarnings = currentEarnings + itemThreeAmount;
-                inspectorChance = inspectorChance + 10;
-            }
+            //track number of times button clicked for game winning stats
+            buttonClicks = buttonClicks + 1;
+
+            //moving to checkPostalInspector because when you lost the game
+            //it was incorrectly adding the shipped total from the items you lost on
+            // if (itemOne.checked){
+            //     currentEarnings = currentEarnings + itemOneAmount;
+            // }
+            // if (itemTwo.checked){
+            //     currentEarnings = currentEarnings + itemTwoAmount;
+            // }
+            // //itemThree is the illegal item, always
+            // //increases chance an inspector ends the game
+            // if (itemThree.checked){
+            //     currentEarnings = currentEarnings + itemThreeAmount;
+            //     //moving this to the postal inspector
+            //     //the logic was wrongly showing 0 percent on screen, but actually 5 percent
+            //     //inspectorChance = inspectorChance + 5;
+            // }
             //shipping the safe items (one or two) only
             //decreases chances inspector comes, minimum of 0
             if ( (itemOne.checked || itemTwo.checked) &! itemThree.checked){
-                inspectorChance = Math.max(0, inspectorChance - 5);
+                inspectorChance = Math.max(0, inspectorChance - 2);
             }
 
             //update Current Earnings id="earnings"
             earnings.textContent = currentEarnings;
 
+            //moved this to checkPostalInspector, cause the logic was wrong
             //update Inspector Chance id="inspector"
-            inspector.textContent = inspectorChance;
+            //inspector.textContent = inspectorChance;
             
             //disable the Ship Items button
             var button = document.getElementById("btnShip");
             button.disabled = true;
             
             //see if the postal inspector pays a visit and ends the game
-            checkPostalInspector();
+            //he does not visit the first round
+            if(newGame){
+                newGame = false;
+            } else {
+                checkPostalInspector();
+            }
             
+            //set up items for the next round
             makeNewItems();
         }
 
@@ -143,15 +160,45 @@
         function checkPostalInspector(){
             var earnings = document.getElementById("earnings");
             var inspector = document.getElementById("inspector");
-                        
+            var itemThree = document.getElementById("itemThree");
+
+            if(itemThree.checked){
+                inspectorChance = inspectorChance + 5;
+            }
+            
+            //update Inspector Chance id="inspector"
+            inspector.textContent = inspectorChance;
+            
+            //random between 1 and 100
             var random = Math.floor(Math.random() * 100) + 1;
             if(random <= inspectorChance){
                 alert("The Inspector Caught You! Game Over! Maximum earned: " + currentEarnings);
+                //reset game variables
                 inspectorChance = 0;
                 currentEarnings = 0;
+                earnings1000Flag = false;
+                earnings2500Flag = false;
                 earnings.textContent = currentEarnings;
                 inspector.textContent = inspectorChance;
+                newGame = true;
+                buttonClicks = 0;
                 makeNewItems();
+            }
+
+            //since the player did not lose, calculate their current earnings
+            if (itemOne.checked){
+                currentEarnings = currentEarnings + itemOneAmount;
+            }
+            if (itemTwo.checked){
+                currentEarnings = currentEarnings + itemTwoAmount;
+            }
+            //itemThree is the illegal item, always
+            //increases chance an inspector ends the game
+            if (itemThree.checked){
+                currentEarnings = currentEarnings + itemThreeAmount;
+                //moving this to the postal inspector
+                //the logic was wrongly showing 0 percent on screen, but actually 5 percent
+                //inspectorChance = inspectorChance + 5;
             }
             
             if(currentEarnings >= 1000 &! earnings1000Flag){
@@ -164,9 +211,16 @@
                 earnings2500Flag = true;
             }
 
-            if(currentEarnings >= 5000 &! earnings5000Flag){
-                alert("YOU WON THE GAME!");
-                earnings5000Flag = true;
+            if(currentEarnings >= 5000){
+                alert("YOU WON THE GAME! You clicked the Ship Items button " + buttonClicks + " times");
+                buttonClicks = 0;
+                inspectorChance = 0;
+                currentEarnings = 0;
+                earnings1000Flag = false;
+                earnings2500Flag = false;
+                earnings.textContent = currentEarnings;
+                inspector.textContent = inspectorChance;
+                newGame = true;
             }
         }
     </script>
