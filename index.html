@@ -49,9 +49,6 @@
         var earnings1000Flag = false;
         var earnings2500Flag = false;
 
-        //a new game flag so the postal inspector doesn't visit the very first time
-        var newGame = true;
-
         //populate initial items and prices
         makeNewItems();
         
@@ -82,7 +79,7 @@
             var button = document.getElementById("btnShip");
             button.disabled = true;
             
-            if(!newGame && itemThree.checked){
+            if(itemThree.checked){
             checkPostalInspector();
             }
             
@@ -122,7 +119,6 @@
                 earnings2500Flag = false;
                 earnings.textContent = currentEarnings;
                 inspector.textContent = inspectorChance;
-                newGame = true;
             }
 
             //set up items for the next round
@@ -184,7 +180,7 @@
             //if the random number rolled is less than or equal to the inspector chance
             //game over, reset variables, set up next game
             var random = Math.floor(Math.random() * 100) + 1;
-            if(newGame == false && random <= inspectorChance){
+            if(random <= inspectorChance){
                 alert("The Inspector Caught You! Game Over! Maximum earned: " + currentEarnings);
                 //reset game variables
                 inspectorChance = 0;
@@ -205,8 +201,6 @@
             //update Inspector Chance id="inspector"
             inspector.textContent = inspectorChance;
 
-            //make sure newGame flag is false the first time this runs
-            newGame = false; 
         }
     </script>
 </body>
