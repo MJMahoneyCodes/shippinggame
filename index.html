@@ -19,9 +19,9 @@
     <h2>Current Earnings: <span id="earnings">0</span></h2>
     <h2>Inspector Chance: <span id="inspector">0</span></h2>
     <ul>
-        <li id="liitemOne"><input type="checkbox" name="itemOne" id="itemOne">Ornate Chandelier <span id="itemOneEarnings">10</span></li>
-        <li id="liitemTwo"><input type="checkbox" name="itemTwo" id="itemTwo">Fancy Cup <span id="itemTwoEarnings">5</span></li>
-        <li id="liitemThree" class="illegal"><input type="checkbox" name="itemThree" id="itemThree">Live Cobra <span id="itemThreeEarnings">350</span></li>
+        <li><input type="checkbox" name="itemOne" id="itemOne"><span id="itemOneText">Ornate Chandelier </span><span id="itemOneEarnings">10</span></li>
+        <li><input type="checkbox" name="itemTwo" id="itemTwo"><span id="itemTwoText">Fancy Cup </span><span id="itemTwoEarnings">5</span></li>
+        <li class="illegal"><input type="checkbox" name="itemThree" id="itemThree"><span id="itemThreeText">Live Cobra </span> <span id="itemThreeEarnings">350</span></li>
     </ul>
     <button id="btnShip" onclick="shipItems()">Ship Items</button>
     <script>
@@ -31,7 +31,7 @@
 
         var legalItems = [];
         var illegalItems = [];
-        
+
         legalItems[0] = "Ornate Chandelier ";
         legalItems[1] = "Fancy Cup ";
         legalItems[2] = "Silver Ring ";
@@ -43,6 +43,14 @@
         illegalItems[2] = "A Gallon of Blood ";
         illegalItems[3] = "Fireworks ";
         illegalItems[4] = "Bees ";
+
+        //flags for alert notices to only fire one time when reaching that earning level
+        var earnings1000Flag = false;
+        var earnings2500Flag = false;
+        var earnings5000Flag = false;
+
+        //populate initial items and prices
+        makeNewItems();
         
         //called when player clicks the Ship Items button
         //adds earnings, calculates postal inspector odds
@@ -67,7 +75,7 @@
             //increases chance an inspector ends the game
             if (itemThree.checked){
                 currentEarnings = currentEarnings + itemThreeAmount;
-                inspectorChance = inspectorChance + 5;
+                inspectorChance = inspectorChance + 10;
             }
             //shipping the safe items (one or two) only
             //decreases chances inspector comes, minimum of 0
@@ -88,46 +96,78 @@
             //see if the postal inspector pays a visit and ends the game
             checkPostalInspector();
             
-            //
             makeNewItems();
         }
 
         //if shipItems is successful, give the player another round of items
         //third item is always illegal to ship
         function makeNewItems(){
+            var itemOneText = document.getElementById("itemOneText");
+            var itemTwoText = document.getElementById("itemTwoText");
+            var itemThreeText = document.getElementById("itemThreeText");
+            var itemOneAmount = document.getElementById("itemOneEarnings");
+            var itemTwoAmount = document.getElementById("itemTwoEarnings");
+            var itemThreeAmount = document.getElementById("itemThreeEarnings");
+            
             //clear checked items
-            var itemOne = document.getElementById("itemOne");
-            var itemTwo = document.getElementById("itemTwo");
-            var itemThree = document.getElementById("itemThree");
             itemOne.checked = false;
             itemTwo.checked = false;
             itemThree.checked = false;
 
             //populate itemOne
-
+            var random1 = Math.floor(Math.random() * legalItems.length);
+            itemOneText.textContent = (legalItems[random1]);
+            //populate itemOne price
+            itemOneAmount.textContent = Math.floor(Math.random() * 10) + 1;
             
             //populate itemTwo
-
+            var random2 = Math.floor(Math.random() * legalItems.length);
+            itemTwoText.textContent = (legalItems[random2]);
+            //populate itemTwo price
+            itemTwoAmount.textContent = Math.floor(Math.random() * 10) + 1;
             
             //populate itemThree (illegal item)
-            
+            var random3 = Math.floor(Math.random() * illegalItems.length);
+            itemThreeText.textContent = (illegalItems[random3]);
+            //populate itemThree price
+            itemThreeAmount.textContent = Math.floor(Math.random() * 350) + 100;
             
             //enable the Ship Items button
             var button = document.getElementById("btnShip");
             button.disabled = false;
-            alert("I would make new items")
         }
 
         //compare a random roll (1 - 100)
         //to the postal inspector chance
         //if less than or equal, game over!
         function checkPostalInspector(){
-            //roll random number
-            //compare the number to postal inspector chance
+            var earnings = document.getElementById("earnings");
+            var inspector = document.getElementById("inspector");
+                        
+            var random = Math.floor(Math.random() * 100) + 1;
+            if(random <= inspectorChance){
+                alert("The Inspector Caught You! Game Over! Maximum earned: " + currentEarnings);
+                inspectorChance = 0;
+                currentEarnings = 0;
+                earnings.textContent = currentEarnings;
+                inspector.textContent = inspectorChance;
+                makeNewItems();
+            }
+            
+            if(currentEarnings >= 1000 &! earnings1000Flag){
+                alert("Wow, you're making some serious cash!");
+                earnings1000Flag = true;
+            }
 
-            //if postal inspector
-            //clear everything
-            alert("Game Over! Your score was " + currentEarnings);
+            if(currentEarnings >= 2500 &! earnings2500Flag){
+                alert("Wow, half-way to winning the game!");
+                earnings2500Flag = true;
+            }
+
+            if(currentEarnings >= 5000 &! earnings5000Flag){
+                alert("YOU WON THE GAME!");
+                earnings5000Flag = true;
+            }
         }
     </script>
 </body>
