@@ -192,10 +192,13 @@
                 newGame = true;
                 buttonClicks = 0;
                 makeNewItems();
+                return;
             }
             
             //every time Item Three (Illegal Item) is checked
             //increase the inspector chance amount
+            //we do this after shipItems so that the current inspectorChance is used
+            //in the if statement directly above
             inspectorChance = inspectorChance + 5;
             
             //update Inspector Chance id="inspector"
