@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Game</title>
+    <style>
+        .illegal{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h2>Shipping Game</h2>
+    <h2>Current Earnings: <span id="earnings">0</span></h2>
+    <ul>
+        <li id="liitemOne"><input type="checkbox" name="itemOne" id="itemOne">Ornate Chandelier <span id="itemOneEarnings">100</span></li>
+        <li id="liitemTwo"><input type="checkbox" name="itemTwo" id="itemTwo">Fancy Cup <span id="itemTwoEarnings">50</span></li>
+        <li id="liitemThree" class="illegal"><input type="checkbox" name="itemThree" id="itemThree">Live Cobra <span id="itemThreeEarnings">350</span></li>
+    </ul>
+    <button id="btnShip" onclick="shipItems">Ship Items</button>
+    <script>
+        //the total amount of money the player has earned
+        var currentEarnings = 0;
+        
+        //called when player clicks the Ship Items button
+        //adds earnings, calculates postal inspector odds
+        //if an illegal item was shipped and postal inspector fires, game over
+        function shipItems(){
+            var earnings = document.getElementById("earnings");
+            var itemOne = document.getElementById("itemOne");
+            var itemTwo = document.getElementById("itemTwo");
+            var itemThree = document.getElementById("itemThree");
+            var itemOneAmount = document.getElementById("itemOneEarnings").textContent;
+            var itemTwoAmount = document.getElementById("itemTwoEarnings").textContent;
+            var itemThreeAmount = document.getElementById("itemThreeEarnings").textContent;
+
+            if (itemOne.checked){
+                currentEarnings = currentEarnings + itemOneAmount;
+            }
+            if (itemTwo.checked){
+                currentEarnings = currentEarnings + itemTwoAmount;
+            }
+            if (itemThree.checked){
+                currentEarnings = currentEarnings + itemThreeAmount;
+            }
+
+            //update Current Earnings id="earnings"
+            earnings.value = currentEarnings;
+            makeNewItems();
+        }
+
+        //if shipItems is successful, give the player another round of items
+        //third item is always illegal to ship
+        function makeNewItems(){
+            alert("I would make new items")
+        }
+    </script>
+</body>
+</html>
