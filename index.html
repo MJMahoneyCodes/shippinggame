@@ -93,8 +93,8 @@
                 inspectorChance = Math.max(0, inspectorChance - 2);
             }
 
-            //update Current Earnings id="earnings"
-            earnings.textContent = currentEarnings;
+            // //update Current Earnings id="earnings"
+            // earnings.textContent = currentEarnings;
 
             //moved this to checkPostalInspector, cause the logic was wrong
             //update Inspector Chance id="inspector"
@@ -104,14 +104,16 @@
             var button = document.getElementById("btnShip");
             button.disabled = true;
             
-            //see if the postal inspector pays a visit and ends the game
-            //he does not visit the first round
-            if(newGame){
-                newGame = false;
-            } else {
-                checkPostalInspector();
-            }
+            // //see if the postal inspector pays a visit and ends the game
+            // //he does not visit the first round
+            // if(newGame){
+            //     newGame = false;
+            // } else {
+            //     checkPostalInspector();
+            // }
             
+            checkPostalInspector();
+
             //set up items for the next round
             makeNewItems();
         }
@@ -160,7 +162,12 @@
         function checkPostalInspector(){
             var earnings = document.getElementById("earnings");
             var inspector = document.getElementById("inspector");
+            var itemOne = document.getElementById("itemOne");
+            var itemTwo = document.getElementById("itemTwo");
             var itemThree = document.getElementById("itemThree");
+            var itemOneAmount = parseInt(document.getElementById("itemOneEarnings").textContent);
+            var itemTwoAmount = parseInt(document.getElementById("itemTwoEarnings").textContent);
+            var itemThreeAmount = parseInt(document.getElementById("itemThreeEarnings").textContent);
 
             if(itemThree.checked){
                 inspectorChance = inspectorChance + 5;
@@ -171,7 +178,7 @@
             
             //random between 1 and 100
             var random = Math.floor(Math.random() * 100) + 1;
-            if(random <= inspectorChance){
+            if(newGame == false && random <= inspectorChance){
                 alert("The Inspector Caught You! Game Over! Maximum earned: " + currentEarnings);
                 //reset game variables
                 inspectorChance = 0;
@@ -184,6 +191,8 @@
                 buttonClicks = 0;
                 makeNewItems();
             }
+
+            newGame = false; 
 
             //since the player did not lose, calculate their current earnings
             if (itemOne.checked){
@@ -200,6 +209,9 @@
                 //the logic was wrongly showing 0 percent on screen, but actually 5 percent
                 //inspectorChance = inspectorChance + 5;
             }
+
+            //update Current Earnings id="earnings"
+            earnings.textContent = currentEarnings;
             
             if(currentEarnings >= 1000 &! earnings1000Flag){
                 alert("Wow, you're making some serious cash!");
