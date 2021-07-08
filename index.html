@@ -29,21 +29,22 @@
         var currentEarnings = 0;
         var inspectorChance = 0;
         var buttonClicks = 0;
+        var itemsShipped = 0;
 
         var legalItems = [];
         var illegalItems = [];
         var adjectives = [];
 
         adjectives[0] = "Ornate ";
-        adjectives[0] = "Fancy ";
-        adjectives[0] = "Silver ";
-        adjectives[0] = "Gold ";
-        adjectives[0] = "Antique ";
-        adjectives[0] = "Vintage ";
-        adjectives[0] = "Shiny ";
-        adjectives[0] = "Replica ";
-        adjectives[0] = "Broken ";
-        adjectives[0] = "Ostentatious ";
+        adjectives[1] = "Fancy ";
+        adjectives[2] = "Silver ";
+        adjectives[3] = "Gold ";
+        adjectives[4] = "Antique ";
+        adjectives[5] = "Vintage ";
+        adjectives[6] = "Shiny ";
+        adjectives[7] = "Replica ";
+        adjectives[8] = "Broken ";
+        adjectives[9] = "Ostentatious ";
 
         legalItems[0] = "Chandelier ";
         legalItems[1] = "Cup ";
@@ -107,15 +108,18 @@
             
             //calculate their current earnings
             if (itemOne.checked){
-            currentEarnings = currentEarnings + itemOneAmount;
+                currentEarnings = currentEarnings + itemOneAmount;
+                itemsShipped = itemsShipped + 1;
             }
             if (itemTwo.checked){
                 currentEarnings = currentEarnings + itemTwoAmount;
+                itemsShipped = itemsShipped + 1;
             }
             //itemThree is the illegal item, always
             //increases chance an inspector ends the game
             if (itemThree.checked){
                 currentEarnings = currentEarnings + itemThreeAmount;
+                itemsShipped = itemsShipped + 1;
             }
 
             //update Current Earnings id="earnings"
@@ -133,7 +137,8 @@
             }
 
             if(currentEarnings >= 5000){
-                alert("YOU WON THE GAME! You clicked the Ship Items button " + buttonClicks + " times");
+                alert("YOU WON THE GAME! You clicked the Ship Items button " + buttonClicks + " times. " +
+                "You shipped " + itemsShipped + " items!");
                 buttonClicks = 0;
                 inspectorChance = 0;
                 currentEarnings = 0;
@@ -166,7 +171,7 @@
 
             //populate itemOne
             var randomA1 = Math.floor(Math.random() * adjectives.length);
-            itemOneAdjective.textcontent = adjectives[randomA1];
+            itemOneAdjective.textContent = adjectives[randomA1];
             var random1 = Math.floor(Math.random() * legalItems.length);
             itemOneText.textContent = (legalItems[random1]);
             //populate itemOne price
